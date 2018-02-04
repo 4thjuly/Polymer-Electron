@@ -34,7 +34,6 @@
           </div> 
         </div>
       </div>
-      <!-- <image id="image1" class="flex middle"></image> -->
       <div class="status">{{status}}</div>
     </div>
   </template>
@@ -45,12 +44,13 @@
 
       constructor() {
         super();
-        this.status = 'Starting...';
+        this.status = 'Starting';
       }
 
       ready() {
         super.ready();
         this.status = 'Started';
+        this.loadAllImages();
       }
 
       async loadImage(url) {
@@ -71,13 +71,17 @@
         return objUrl;
       }
 
-      async handleClick() {
-        this.status = 'Loading...';
+      async loadAllImages() {
         let p1 = this.loadImage('http://192.168.1.163/dms').then((objUrl) => { this.$.image1.src = objUrl});
         let p2 = this.loadImage('http://192.168.1.169/dms').then((objUrl) => { this.$.image2.src = objUrl});
         let p3 = this.loadImage('http://192.168.1.168/dms').then((objUrl) => { this.$.image3.src = objUrl});
         let p4 = this.loadImage('http://192.168.1.166/cgi-bin/viewer/video.jpg?streamid=0').then((objUrl) => { this.$.image4.src = objUrl});
-        await Promise.all([p1, p2, p3]);
+        await Promise.all([p1, p2, p3, p4]);
+      }
+
+      async handleClick() {
+        this.status = 'Loading';
+        await this.loadAllImages();
         this.status = 'Loaded';
       }
 
