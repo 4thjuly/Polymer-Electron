@@ -1,22 +1,12 @@
 {
-  "name": "rss-app",
+  "name": "test-app",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "Camera Test App",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-packager ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
-  "keywords": [
-    "Electron",
-    "Polymer",
-    "starter",
-    "boilerplate",
-    "demo"
-  ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
   "devDependencies": {
     "electron": "~1.6.2",
     "electron-packager": "^8.6.0",
@@ -25,10 +15,6 @@
     "eslint-plugin-html": "^1.7.0"
   },
   "dependencies": {
-    "async": "^2.3.0",
-    "electron-reload": "^1.2.2",
-    "isomorphic-fetch": "^2.2.1",
-    "lodash": "^4.17.4",
-    "rss-parser": "^2.6.1"
+    "electron-reload": "^1.2.2"
   }
 }
