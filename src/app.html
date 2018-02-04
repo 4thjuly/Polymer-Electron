@@ -1,6 +1,7 @@
 <link rel="import" href="../lib/polymer/polymer.html">
 <link rel="import" href="../lib/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../lib/paper-button/paper-button.html">
+<link rel="import" href="../lib/paper-toggle-button/paper-toggle-button.html">
 
 <dom-module id="test-app">
 
@@ -15,7 +16,10 @@
     </style>
 
     <div class="layout vertical outer">
-      <div class="layout horizontal top-bar"><paper-button on-click="handleClick">Refresh</paper-button></div>
+      <div class="layout horizontal top-bar">
+        <paper-button on-click="handleClick">Refresh</paper-button>
+        <paper-toggle-button>Auto</paper-toggle-button>
+      </div>
       <div id="imageGrid1" class="layout vertical flex middle">
         <div class="layout horizontal flex"> 
           <div class="flex">
