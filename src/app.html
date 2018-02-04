@@ -11,11 +11,24 @@
       .outer { height:100% }
       .middle { background-color: lightsteelblue; text-align: center}
       .status { text-align: right; padding: 0px 10px }
+      .image { width: 100%; height: 100%; object-fit: contain }
     </style>
 
     <div class="layout vertical outer">
-      <div class="layout horizontal top-bar"><paper-button on-click="handleClick">Test</paper-button></div>
-      <image id="image" class="flex middle"></image>
+      <div class="layout horizontal top-bar"><paper-button on-click="handleClick">Refresh</paper-button></div>
+      <div id="imageGrid1" class="layout vertical flex middle">
+        <div class="layout horizontal flex"> 
+          <div class="flex">
+              <image id="image1" class="image"> </image>
+          </div> 
+          <div class="flex" style="background-color: red"> Two </div> 
+        </div>
+        <div class="layout horizontal flex"> 
+            <div class="flex"> Three </div>
+            <div class="flex"> Four </div> 
+        </div>
+      </div>
+      <!-- <image id="image1" class="flex middle"></image> -->
       <div class="status">{{status}}</div>
     </div>
   </template>
@@ -36,17 +49,21 @@
 
       async handleClick() {
         try {
-          let fetch = require('isomorphic-fetch');
+          // let fetch = require('isomorphic-fetch');
           let headers = new Headers();
-          headers.append('Authorization', 'Basic' + btoa('test:test'));
+          headers.append('Authorization', 'Basic ' + btoa('test:test'));
           this.status = 'Loading...';
           let resp = await fetch('http://192.168.1.163/dms', {headers: headers});
+          // let resp = await fetch('https://facebook.github.io/react-native/docs/assets/favicon.png');
           if (resp.ok) {
             this.status = 'Loaded';
+            // const reader = resp.body.getReader();
+            // let data = reader.read();
             let blob = await resp.blob();
-            var image = document.getElementById('image');
-            var objURL = URL.createObjectURL(blob);
-            image.src = objURL;
+            var objUrl = URL.createObjectURL(blob);
+            // var image = this.getElementById('image1');
+            // image.src = objURL;
+            this.$.image1.src = objUrl;
           } else {
             this.status = 'Error: ' + resp.statusText;
           }
