@@ -17,8 +17,8 @@
 
     <div class="layout vertical outer">
       <div class="layout horizontal top-bar">
-        <paper-button on-click="handleClick">Refresh</paper-button>
-        <paper-toggle-button>Auto</paper-toggle-button>
+        <paper-button on-click="handleRefreshClick">Refresh</paper-button>
+        <paper-toggle-button id="autoToggle1" on-click="handleAutoClick">Auto</paper-toggle-button>
       </div>
       <div id="imageGrid1" class="layout vertical flex middle">
         <div class="layout horizontal flex"> 
@@ -43,6 +43,8 @@
   </template>
 
   <script>
+    const REFRESH_INTERVAL = 250;
+
     class TestApp extends Polymer.Element {
       static get is() { return 'test-app' }
 
@@ -83,10 +85,26 @@
         await Promise.all([p1, p2, p3, p4]);
       }
 
-      async handleClick() {
+      async handleRefreshClick() {
         this.status = 'Loading';
         await this.loadAllImages();
         this.status = 'Loaded';
+      }
+
+      handleAutoClick() {
+        if (this.$.autoToggle1.checked) {
+          setTimeout(() => this.handleTimeout(), REFRESH_INTERVAL);
+        }
+      }
+
+      async handleTimeout() {
+        if (this.$.autoToggle1.checked) {
+          this.status = 'Auto';
+          await this.loadAllImages();
+          if (this.$.autoToggle1.checked) {
+            setTimeout(() => this.handleTimeout(), REFRESH_INTERVAL);
+          }
+        }
       }
 
     }
