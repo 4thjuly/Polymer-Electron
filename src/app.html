@@ -21,11 +21,15 @@
           <div class="flex">
               <image id="image1" class="image"> </image>
           </div> 
-          <div class="flex" style="background-color: red"> Two </div> 
+          <div class="flex"> 
+              <image id="image2" class="image"> </image>
+          </div> 
         </div>
         <div class="layout horizontal flex"> 
-            <div class="flex"> Three </div>
-            <div class="flex"> Four </div> 
+          <div class="flex"> 
+              <image id="image3" class="image"> </image>  
+          </div>
+          <div class="flex"> Four </div> 
         </div>
       </div>
       <!-- <image id="image1" class="flex middle"></image> -->
@@ -47,29 +51,31 @@
         this.status = 'Started';
       }
 
-      async handleClick() {
+      async loadImage(url) {
+        let objUrl = null;
         try {
-          // let fetch = require('isomorphic-fetch');
           let headers = new Headers();
           headers.append('Authorization', 'Basic ' + btoa('test:test'));
-          this.status = 'Loading...';
-          let resp = await fetch('http://192.168.1.163/dms', {headers: headers});
-          // let resp = await fetch('https://facebook.github.io/react-native/docs/assets/favicon.png');
+          let resp = await fetch(url, {headers: headers});
           if (resp.ok) {
-            this.status = 'Loaded';
-            // const reader = resp.body.getReader();
-            // let data = reader.read();
             let blob = await resp.blob();
-            var objUrl = URL.createObjectURL(blob);
-            // var image = this.getElementById('image1');
-            // image.src = objURL;
-            this.$.image1.src = objUrl;
+            objUrl = URL.createObjectURL(blob);
           } else {
-            this.status = 'Error: ' + resp.statusText;
+            console.log('ERROR loadImage: ', resp.statusText);
           }
         } catch (error) {
-          console.log('ERROR handleClick: ', error);
+          console.log('ERROR loadImage: ', error);
         }
+        return objUrl;
+      }
+
+      async handleClick() {
+        this.status = 'Loading...';
+        let p1 = this.loadImage('http://192.168.1.163/dms').then((objUrl) => { this.$.image1.src = objUrl});
+        let p2 = this.loadImage('http://192.168.1.169/dms').then((objUrl) => { this.$.image2.src = objUrl});
+        let p3 = this.loadImage('http://192.168.1.168/dms').then((objUrl) => { this.$.image3.src = objUrl});
+        await Promise.all([p1, p2, p3]);
+        this.status = 'Loaded';
       }
 
     }
