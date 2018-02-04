@@ -14,9 +14,9 @@
     </style>
 
     <div class="layout vertical outer">
-      <div class="layout horizontal top-bar"><paper-button>Test</paper-button></div>
-      <div class="flex middle">Middle</div>
-      <div class="status">Status</div>
+      <div class="layout horizontal top-bar"><paper-button on-click="handleClick">Test</paper-button></div>
+      <image id="image" class="flex middle"></image>
+      <div class="status">{{status}}</div>
     </div>
   </template>
 
@@ -24,8 +24,35 @@
     class TestApp extends Polymer.Element {
       static get is() { return 'test-app' }
 
+      constructor() {
+        super();
+        this.status = 'Starting...';
+      }
+
       ready() {
         super.ready();
+        this.status = 'Started';
+      }
+
+      async handleClick() {
+        try {
+          let fetch = require('isomorphic-fetch');
+          let headers = new Headers();
+          headers.append('Authorization', 'Basic' + btoa('test:test'));
+          this.status = 'Loading...';
+          let resp = await fetch('http://192.168.1.163/dms', {headers: headers});
+          if (resp.ok) {
+            this.status = 'Loaded';
+            let blob = await resp.blob();
+            var image = document.getElementById('image');
+            var objURL = URL.createObjectURL(blob);
+            image.src = objURL;
+          } else {
+            this.status = 'Error: ' + resp.statusText;
+          }
+        } catch (error) {
+          console.log('ERROR handleClick: ', error);
+        }
       }
 
     }
