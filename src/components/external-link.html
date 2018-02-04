@@ -1,0 +1,41 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+
+<!--
+    This is simply an href-like element that opens the given href in the
+    system's default browser, instead of in the Electron shell.
+-->
+<dom-module id="external-link">
+  <template>
+    <style>
+      .link-wrapper {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    </style>
+    <div on-click="openLink" class="link-wrapper">
+      <slot></slot>
+    </div>
+  </template>
+
+  <script>
+    const {shell} = require('electron');
+
+    class ExternalLink extends Polymer.Element {
+      static get is() { return 'external-link' }
+
+      static get properties() {
+        return {
+          href: {
+            type: String
+          }
+        }
+      }
+
+      openLink() {
+        shell.openExternal(this.href);
+      }
+    }
+
+    customElements.define(ExternalLink.is, ExternalLink);
+  </script>
+</dom-module>

@@ -1,0 +1,43 @@
+<link rel="import" href="../../lib/polymer/polymer.html">
+<link rel="import" href="../../lib/iron-list/iron-list.html">
+<link rel="import" href="../../lib/paper-item/paper-item.html">
+<link rel="import" href="../components/external-link.html">
+
+<dom-module id="view-feed">
+  <template>
+    <link rel="stylesheet" href="src/styles.css">
+    <div class="card">
+      <h1>My Feed</h1>
+
+      <iron-list items="[[articles]]" as="article">
+        <template>
+          <paper-item>
+            <paper-item-body two-line>
+              <external-link href="[[article.link]]" class="header-link">
+                [[article.title]]
+              </external-link>
+              <div secondary inner-h-t-m-l="[[article.content]]"></div>
+            </paper-item-body>
+          </paper-item>
+        </template>
+      </iron-list>
+    </div>
+  </template>
+
+  <script>
+    class ViewFeed extends Polymer.Element {
+      static get is() { return 'view-feed' }
+
+      static get properties() {
+        return {
+          articles: {
+            type: Array,
+            notify: true
+          }
+        }
+      }
+    }
+
+    customElements.define(ViewFeed.is, ViewFeed);
+  </script>
+</dom-module>

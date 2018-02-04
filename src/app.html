@@ -1,0 +1,37 @@
+<link rel="import" href="../lib/polymer/polymer.html">
+<link rel="import" href="../lib/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../lib/paper-button/paper-button.html">
+
+<link rel="import" href="components/rss-icons.html">
+
+<dom-module id="rss-app">
+
+  <template>
+    <style include="iron-flex">
+      :host { --app-primary-color: #4285f4; --app-secondary-color: black; display: block; background-color:lightgray }
+      .top-bar { color: #fff; background-color: var(--app-primary-color); }
+      .outer { height:100% }
+      .middle { background-color: lightsteelblue}
+    </style>
+
+    <div class="layout vertical outer">
+      <div class="layout horizontal top-bar"><paper-button>Test</paper-button></div>
+      <div class="flex middle">Middle</div>
+      <div>Bottom</div>
+    </div>
+  </template>
+
+  <script>
+    class RSSApp extends Polymer.Element {
+      static get is() { return 'rss-app' }
+
+      ready() {
+        super.ready();
+      }
+
+    }
+
+    customElements.define(RSSApp.is, RSSApp);
+  </script>
+
+</dom-module>
