@@ -51,6 +51,7 @@
       constructor() {
         super();
         this.status = 'Starting';
+        this.skip = new Map();
       }
 
       ready() {
@@ -60,6 +61,10 @@
       }
 
       async loadImage(url) {
+        if (this.skip[url]) {
+          console.log('loadImage skipping: ', url);
+          return null;
+        }
         let objUrl = null;
         try {
           let headers = new Headers();
@@ -73,20 +78,22 @@
           }
         } catch (error) {
           console.log('ERROR loadImage: ', error);
+          this.skip[url] = true;
         }
         return objUrl;
       }
 
       async loadAllImages() {
-        let p1 = this.loadImage('http://192.168.1.163/dms').then((objUrl) => { this.$.image1.src = objUrl});
-        let p2 = this.loadImage('http://192.168.1.169/dms').then((objUrl) => { this.$.image2.src = objUrl});
-        let p3 = this.loadImage('http://192.168.1.168/dms').then((objUrl) => { this.$.image3.src = objUrl});
-        let p4 = this.loadImage('http://192.168.1.166/cgi-bin/viewer/video.jpg?streamid=0').then((objUrl) => { this.$.image4.src = objUrl});
+        let p1 = this.loadImage('http://192.168.1.163/dms').then((objUrl) => { if (objUrl) this.$.image1.src = objUrl});
+        let p2 = this.loadImage('http://192.168.1.169/dms').then((objUrl) => { if (objUrl) this.$.image2.src = objUrl});
+        let p3 = this.loadImage('http://192.168.1.168/dms').then((objUrl) => { if (objUrl) this.$.image3.src = objUrl});
+        let p4 = this.loadImage('http://192.168.1.166/cgi-bin/viewer/video.jpg?streamid=0').then((objUrl) => { if (objUrl) this.$.image4.src = objUrl});
         await Promise.all([p1, p2, p3, p4]);
       }
 
       async handleRefreshClick() {
         this.status = 'Loading';
+        this.skip.clear();
         await this.loadAllImages();
         this.status = 'Loaded';
       }
