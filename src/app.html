@@ -57,7 +57,7 @@
       ready() {
         super.ready();
         this.status = 'Started';
-        this.loadAllImages();
+        this.loadAndDisplayAllImages();
       }
 
       async loadImage(url) {
@@ -83,37 +83,34 @@
         return objUrl;
       }
 
-      async loadAllImages() {
-        let p1 = this.loadImage('http://192.168.1.163/dms').then((objUrl) => { if (objUrl) this.$.image1.src = objUrl});
-        let p2 = this.loadImage('http://192.168.1.169/dms').then((objUrl) => { if (objUrl) this.$.image2.src = objUrl});
-        let p3 = this.loadImage('http://192.168.1.168/dms').then((objUrl) => { if (objUrl) this.$.image3.src = objUrl});
-        let p4 = this.loadImage('http://192.168.1.166/cgi-bin/viewer/video.jpg?streamid=0').then((objUrl) => { if (objUrl) this.$.image4.src = objUrl});
-        await Promise.all([p1, p2, p3, p4]);
+      async loadAndDisplayImage(url, imageElem) {
+        let objUrl = await this.loadImage(url);
+        if (objUrl) { 
+          imageElem.src = objUrl;
+          if (this.$.autoToggle1.checked) {
+            setTimeout(() => { this.loadAndDisplayImage(url, imageElem) }, REFRESH_INTERVAL);
+          }
+        }
+      }
+
+      async loadAndDisplayAllImages() {
+        this.loadAndDisplayImage('http://192.168.1.163/dms', this.$.image1);
+        this.loadAndDisplayImage('http://192.168.1.169/dms', this.$.image2);
+        this.loadAndDisplayImage('http://192.168.1.168/dms', this.$.image3);
+        this.loadAndDisplayImage('http://192.168.1.166/cgi-bin/viewer/video.jpg?streamid=0', this.$.image4);
       }
 
       async handleRefreshClick() {
-        this.status = 'Loading';
         this.skip.clear();
-        await this.loadAllImages();
-        this.status = 'Loaded';
+        this.loadAndDisplayAllImages();
       }
 
       handleAutoClick() {
         if (this.$.autoToggle1.checked) {
           this.status = 'Auto';
-          setTimeout(() => this.handleTimeout(), REFRESH_INTERVAL);
+          this.loadAndDisplayAllImages();
         } else {
           this.status = '';
-        }
-      }
-
-      async handleTimeout() {
-        if (this.$.autoToggle1.checked) {
-          this.status = 'Auto';
-          await this.loadAllImages();
-          if (this.$.autoToggle1.checked) {
-            setTimeout(() => this.handleTimeout(), REFRESH_INTERVAL);
-          }
         }
       }
 
